@@ -1,225 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>K8s in Action02 Use K8s - Even - A super concise theme for Hugo</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="qiaocc" /><meta name="description" content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku" /><meta name="keywords" content="Hugo, theme, even" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.80.0 with theme even" />
-
-
-<link rel="canonical" href="https://qiaocci.github.io/post/k8s-in-action02-use-k8s/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-<link href="/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="K8s in Action02 Use K8s" />
-<meta property="og:description" content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://qiaocci.github.io/post/k8s-in-action02-use-k8s/" />
-<meta property="article:published_time" content="2021-02-01T13:51:15+08:00" />
-<meta property="article:modified_time" content="2021-02-01T13:51:15+08:00" />
-<meta itemprop="name" content="K8s in Action02 Use K8s">
-<meta itemprop="description" content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku">
-<meta itemprop="datePublished" content="2021-02-01T13:51:15+08:00" />
-<meta itemprop="dateModified" content="2021-02-01T13:51:15+08:00" />
-<meta itemprop="wordCount" content="942">
-
-
-
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="K8s in Action02 Use K8s"/>
-<meta name="twitter:description" content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">Even</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">Even</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">K8s in Action02 Use K8s</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2021-02-01 </span>
-        
-        
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">Contents</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#配置k8s集群">配置k8s集群</a>
-      <ul>
-        <li><a href="#使用minikube搭建">使用minikube搭建</a></li>
-      </ul>
-    </li>
-    <li><a href="#chap2-使用docker和k8s">chap2 使用docker和k8s</a>
-      <ul>
-        <li><a href="#23-在k8s运行第一个应用">2.3 在k8s运行第一个应用</a>
-          <ul>
-            <li><a href="#创建服务">创建服务</a></li>
-            <li><a href="#水平扩展">水平扩展</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <p>入门</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">minikube version
-<span class="c1"># 运行k8s集群</span>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>K8s in Action02 Use K8s - Even - A super concise theme for Hugo</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="qiaocc"><meta name=description content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku"><meta name=keywords content="Hugo,theme,even"><meta name=generator content="Hugo 0.79.1 with theme even"><link rel=canonical href=https://qiaocci.github.io/post/k8s-in-action02-use-k8s/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="K8s in Action02 Use K8s"><meta property="og:description" content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku"><meta property="og:type" content="article"><meta property="og:url" content="https://qiaocci.github.io/post/k8s-in-action02-use-k8s/"><meta property="article:published_time" content="2021-02-01T13:51:15+08:00"><meta property="article:modified_time" content="2021-02-01T13:51:15+08:00"><meta itemprop=name content="K8s in Action02 Use K8s"><meta itemprop=description content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku"><meta itemprop=datePublished content="2021-02-01T13:51:15+08:00"><meta itemprop=dateModified content="2021-02-01T13:51:15+08:00"><meta itemprop=wordCount content="942"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="K8s in Action02 Use K8s"><meta name=twitter:description content="入门 1 2 3 4 5 6 7 8 9 minikube version # 运行k8s集群 minikube start kubectl version # 查看集群信息 kubectl cluster-info # 查看节点信息 kubectl get nodes 配置k8s集群 方法: minikube 单节点 kubeadm 多节点 使用miniku"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Even</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Even</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>K8s in Action02 Use K8s</h1><div class=post-meta><span class=post-time>2021-02-01</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><a href=#配置k8s集群>配置k8s集群</a><ul><li><a href=#使用minikube搭建>使用minikube搭建</a></li></ul></li><li><a href=#chap2-使用docker和k8s>chap2 使用docker和k8s</a><ul><li><a href=#23-在k8s运行第一个应用>2.3 在k8s运行第一个应用</a><ul><li><a href=#创建服务>创建服务</a></li><li><a href=#水平扩展>水平扩展</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><p>入门</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>minikube version
+<span class=c1># 运行k8s集群</span>
 minikube start
 
 kubectl version
-<span class="c1"># 查看集群信息</span>
+<span class=c1># 查看集群信息</span>
 kubectl cluster-info
-<span class="c1"># 查看节点信息</span>
+<span class=c1># 查看节点信息</span>
 kubectl get nodes
-</code></pre></td></tr></table>
-</div>
-</div><h1 id="配置k8s集群">配置k8s集群</h1>
-<p>方法:</p>
-<ol>
-<li>minikube 单节点</li>
-<li>kubeadm 多节点</li>
-</ol>
-<h2 id="使用minikube搭建">使用minikube搭建</h2>
-<ol>
-<li>
-<p>安装minikube <code>https://github.com/kubernetes/minikube</code></p>
-</li>
-<li>
-<p>启动时设置国内镜像<code>minikube start --image-mirror-country='cn' --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers'</code></p>
-<p>结果：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">😄  Debian 10.6 上的 minikube v1.17.0
+</code></pre></td></tr></table></div></div><h1 id=配置k8s集群>配置k8s集群</h1><p>方法:</p><ol><li>minikube 单节点</li><li>kubeadm 多节点</li></ol><h2 id=使用minikube搭建>使用minikube搭建</h2><ol><li><p>安装minikube <code>https://github.com/kubernetes/minikube</code></p></li><li><p>启动时设置国内镜像<code>minikube start --image-mirror-country='cn' --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers'</code></p><p>结果：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>😄  Debian 10.6 上的 minikube v1.17.0
 ✨  根据现有的配置文件使用 docker 驱动程序
 👍  Starting control plane node minikube in cluster minikube
 🚜  Pulling base image ...
@@ -232,283 +42,88 @@ kubectl get nodes
 🌟  Enabled addons: storage-provisioner, default-storageclass
 🏄  Done! kubectl is now configured to use &#34;minikube&#34; cluster and &#34;default&#34; namespace by default
 
-</code></pre></td></tr></table>
-</div>
-</div></li>
-<li>
-<p>安装kubectl</p>
-</li>
-</ol>
-<h1 id="chap2-使用docker和k8s">chap2 使用docker和k8s</h1>
-<h2 id="23-在k8s运行第一个应用">2.3 在k8s运行第一个应用</h2>
-<p>创建deployment</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">k create deployment kubia --image=qiaocc/node-server
-</code></pre></td></tr></table>
-</div>
-</div><p>注意</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 运行老的命令会报错</span>
-k create deployment node-pod --image<span class="o">=</span>qiaocc/node-server --port <span class="m">8080</span> --generator<span class="o">=</span>run/v1
+</code></pre></td></tr></table></div></div></li><li><p>安装kubectl</p></li></ol><h1 id=chap2-使用docker和k8s>chap2 使用docker和k8s</h1><h2 id=23-在k8s运行第一个应用>2.3 在k8s运行第一个应用</h2><p>创建deployment</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>k create deployment kubia --image=qiaocc/node-server
+</code></pre></td></tr></table></div></div><p>注意</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 运行老的命令会报错</span>
+k create deployment node-pod --image<span class=o>=</span>qiaocc/node-server --port <span class=m>8080</span> --generator<span class=o>=</span>run/v1
 
-<span class="c1"># 报错</span>
+<span class=c1># 报错</span>
 Flag --generator has been deprecated, has no effect and will be removed in the future.
-</code></pre></td></tr></table>
-</div>
-</div><p>获取deployment:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">k get deployments
-</code></pre></td></tr></table>
-</div>
-</div><p>创建deployment后, 会默认创建pod.</p>
-<p>pod内部的容器, 共享相同的ip, hostname和命名空间等, 可以理解为容器们在&quot;同一台机器&quot;</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">查看pod信息:
+</code></pre></td></tr></table></div></div><p>获取deployment:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>k get deployments
+</code></pre></td></tr></table></div></div><p>创建deployment后, 会默认创建pod.</p><p>pod内部的容器, 共享相同的ip, hostname和命名空间等, 可以理解为容器们在"同一台机器"</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>查看pod信息:
 k get pods
 
 # pod详情
 k describe pod &lt;pod名&gt;
-</code></pre></td></tr></table>
-</div>
-</div><p>创建deployment背后发生了什么?</p>
-<p><img src="https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210201123940.png" alt=""></p>
-<h3 id="创建服务">创建服务</h3>
-<p>为了访问到app, 我们要创建<strong>LoadBalancer Service</strong>(负载均衡服务)</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">k expose deployment kubia --type<span class="o">=</span>LoadBalancer --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>这个命令将deployment下的所有pod都暴露出来. 你在访问时, 会通过负载均衡连接到集群.</p>
-<p>查看所有api:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl api-resources
-</code></pre></td></tr></table>
-</div>
-</div><p>如何理解负载均衡服务?</p>
-<p><img src="https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210201124002.png" alt=""></p>
-<p>查看服务状态:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">k get service
+</code></pre></td></tr></table></div></div><p>创建deployment背后发生了什么?</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210201123940.png alt></p><h3 id=创建服务>创建服务</h3><p>为了访问到app, 我们要创建<strong>LoadBalancer Service</strong>(负载均衡服务)</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>k expose deployment kubia --type<span class=o>=</span>LoadBalancer --port<span class=o>=</span><span class=m>8080</span>
+</code></pre></td></tr></table></div></div><p>这个命令将deployment下的所有pod都暴露出来. 你在访问时, 会通过负载均衡连接到集群.</p><p>查看所有api:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl api-resources
+</code></pre></td></tr></table></div></div><p>如何理解负载均衡服务?</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210201124002.png alt></p><p>查看服务状态:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>k get service
 
 NAME    TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
 kubia   LoadBalancer   10.108.32.94   &lt;pending&gt;     8080:31820/TCP   90m
-</code></pre></td></tr></table>
-</div>
-</div><p>k8s的负载均衡服务, 是基于云厂商的基础设施的. 如果在本地使用k8s服务, 由于没有云厂商的基础设施, 无法自动创建负载均衡服务. 所以我们需要换一种方式去获取服务.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">minikube service kubia --url
+</code></pre></td></tr></table></div></div><p>k8s的负载均衡服务, 是基于云厂商的基础设施的. 如果在本地使用k8s服务, 由于没有云厂商的基础设施, 无法自动创建负载均衡服务. 所以我们需要换一种方式去获取服务.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>minikube service kubia --url
 # http://192.168.49.2:31820
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="水平扩展">水平扩展</h3>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">k scale deployment kubia --replicas 3
-</code></pre></td></tr></table>
-</div>
-</div><p>扩展后, 可以看到deployment的结果:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">k get deployments
+</code></pre></td></tr></table></div></div><h3 id=水平扩展>水平扩展</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>k scale deployment kubia --replicas 3
+</code></pre></td></tr></table></div></div><p>扩展后, 可以看到deployment的结果:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>k get deployments
 NAME    READY   UP-TO-DATE   AVAILABLE   AGE
 kubia   3/3     3            3           11h
 
-</code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">kubectl get pods
+</code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>kubectl get pods
                   		 READY   STATUS    RESTARTS   AGE
 kubia-64bf794997-95c5q   1/1     Running   0          110s
 kubia-64bf794997-b6pr4   1/1     Running   0          110s
 kubia-64bf794997-v9dcn   1/1     Running   1          7h38m
-</code></pre></td></tr></table>
-</div>
-</div><p>创建了三个容器, 这三个容器, 来自不同的pod. 因为我们使用的是minikube, 所有的pod都来自同一个node节点.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">k get nodes -o wide
+</code></pre></td></tr></table></div></div><p>创建了三个容器, 这三个容器, 来自不同的pod. 因为我们使用的是minikube, 所有的pod都来自同一个node节点.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>k get nodes -o wide
 NAME                     READY   STATUS    RESTARTS   AGE    IP           NODE       NOMINATED NODE   READINESS GATES
 kubia-64bf794997-95c5q   1/1     Running   0          4h5m   172.17.0.7   minikube   &lt;none&gt;           &lt;none&gt;
 kubia-64bf794997-b6pr4   1/1     Running   0          4h5m   172.17.0.8   minikube   &lt;none&gt;           &lt;none&gt;
 kubia-64bf794997-v9dcn   1/1     Running   1          11h    172.17.0.6   minikube   &lt;none&gt;           &lt;none&gt;
 
-</code></pre></td></tr></table>
-</div>
-</div><p>可以看到, 三个pod都来自minikube节点.</p>
-<p>每个pod被分配的节点并不重要, 我们不需要关心.</p>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">Author</span>
-    <span class="item-content">qiaocc</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">LastMod</span>
-    <span class="item-content">
-        2021-02-01
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      
-      <nav class="post-nav">
-        <a class="prev" href="/post/k8s-in-action-running-app-in-k8s/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">K8s in Action Running App in K8s</span>
-            <span class="prev-text nav-mobile">Prev</span>
-          </a>
-        <a class="next" href="/post/ceate_blog/">
-            <span class="next-text nav-default">搭建博客</span>
-            <span class="next-text nav-mobile">Next</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
-      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
-      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
-      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
-      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
-      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
-      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
-      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
-      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
-      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
-      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
-      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
-      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
-      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
-      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
-  <a href="https://qiaocci.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  
-
-  <span class="copyright-year">
-    &copy; 
-    2017 - 
-    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>qiaocc</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+</code></pre></td></tr></table></div></div><p>可以看到, 三个pod都来自minikube节点.</p><p>每个pod被分配的节点并不重要, 我们不需要关心.</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>qiaocc</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2021-02-01</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/k8s-in-action-running-app-in-k8s/><i class="iconfont icon-left"></i><span class="prev-text nav-default">K8s in Action Running App in K8s</span>
+<span class="prev-text nav-mobile">Prev</span></a>
+<a class=next href=/post/ceate_blog/><span class="next-text nav-default">搭建博客</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:your@email.com class="iconfont icon-email" title=email></a><a href=http://localhost:1313 class="iconfont icon-stack-overflow" title=stack-overflow></a><a href=http://localhost:1313 class="iconfont icon-twitter" title=twitter></a><a href=http://localhost:1313 class="iconfont icon-facebook" title=facebook></a><a href=http://localhost:1313 class="iconfont icon-linkedin" title=linkedin></a><a href=http://localhost:1313 class="iconfont icon-google" title=google></a><a href=http://localhost:1313 class="iconfont icon-github" title=github></a><a href=http://localhost:1313 class="iconfont icon-weibo" title=weibo></a><a href=http://localhost:1313 class="iconfont icon-zhihu" title=zhihu></a><a href=http://localhost:1313 class="iconfont icon-douban" title=douban></a><a href=http://localhost:1313 class="iconfont icon-pocket" title=pocket></a><a href=http://localhost:1313 class="iconfont icon-tumblr" title=tumblr></a><a href=http://localhost:1313 class="iconfont icon-instagram" title=instagram></a><a href=http://localhost:1313 class="iconfont icon-gitlab" title=gitlab></a><a href=http://localhost:1313 class="iconfont icon-bilibili" title=bilibili></a><a href=https://qiaocci.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a></span>
+<span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>qiaocc</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js></script></body></html>
