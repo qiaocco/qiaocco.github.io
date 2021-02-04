@@ -6,14 +6,23 @@
     <description>Recent content on Even - A super concise theme for Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 02 Feb 2021 23:11:31 +0800</lastBuildDate><atom:link href="https://qiaocci.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Feb 2021 14:15:22 +0800</lastBuildDate><atom:link href="https://qiaocci.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Test_post</title>
+      <link>https://qiaocci.github.io/post/test_post/</link>
+      <pubDate>Thu, 04 Feb 2021 14:15:22 +0800</pubDate>
+      
+      <guid>https://qiaocci.github.io/post/test_post/</guid>
+      <description>测试</description>
+    </item>
+    
     <item>
       <title>K8s in Action Running App in K8s</title>
       <link>https://qiaocci.github.io/post/k8s-in-action-running-app-in-k8s/</link>
       <pubDate>Tue, 02 Feb 2021 23:11:31 +0800</pubDate>
       
       <guid>https://qiaocci.github.io/post/k8s-in-action-running-app-in-k8s/</guid>
-      <description>重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容</description>
+      <description>chap5 Running Apps in Pods 重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sid</description>
     </item>
     
     <item>
@@ -40,6 +49,15 @@
       <pubDate>Sun, 24 Jan 2021 21:56:04 +0800</pubDate>
       
       <guid>https://qiaocci.github.io/post/first_post/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://qiaocci.github.io/post/k8s-in-action03-deploy-first-app/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://qiaocci.github.io/post/k8s-in-action03-deploy-first-app/</guid>
       <description></description>
     </item>
     
