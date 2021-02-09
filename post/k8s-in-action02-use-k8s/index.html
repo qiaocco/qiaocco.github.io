@@ -67,11 +67,11 @@ k get pods
 
 # pod详情
 k describe pod &lt;pod名&gt;
-</code></pre></td></tr></table></div></div><p>创建deployment背后发生了什么?</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210201123940.png alt></p><h3 id=创建服务>创建服务</h3><p>为了访问到app, 我们要创建<strong>LoadBalancer Service</strong>(负载均衡服务)</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table></div></div><p>创建deployment背后发生了什么?</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150519.png alt></p><h3 id=创建服务>创建服务</h3><p>为了访问到app, 我们要创建<strong>LoadBalancer Service</strong>(负载均衡服务)</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>k expose deployment kubia --type<span class=o>=</span>LoadBalancer --port<span class=o>=</span><span class=m>8080</span>
 </code></pre></td></tr></table></div></div><p>这个命令将deployment下的所有pod都暴露出来. 你在访问时, 会通过负载均衡连接到集群.</p><p>查看所有api:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl api-resources
-</code></pre></td></tr></table></div></div><p>如何理解负载均衡服务?</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210201124002.png alt></p><p>查看服务状态:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table></div></div><p>如何理解负载均衡服务?</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150520.png alt></p><p>查看服务状态:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -117,7 +117,7 @@ kubia-64bf794997-v9dcn   1/1     Running   1          11h    172.17.0.6   miniku
 
 </code></pre></td></tr></table></div></div><p>可以看到, 三个pod都来自minikube节点.</p><p>每个pod被分配的节点并不重要, 我们不需要关心.</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
 <span class=item-content>qiaocc</span></p><p class=copyright-item><span class=item-title>上次更新</span>
-<span class=item-content>2021-02-01</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/k8s-in-action-running-app-in-k8s/><i class="iconfont icon-left"></i><span class="prev-text nav-default">K8s in Action Running App in K8s</span>
+<span class=item-content>2021-02-01</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/k8s-in-action05-running-app-in-k8s/><i class="iconfont icon-left"></i><span class="prev-text nav-default">K8s in Action Running App in K8s</span>
 <span class="prev-text nav-mobile">上一篇</span></a>
 <a class=next href=/post/ceate_blog/><span class="next-text nav-default">搭建博客</span>
 <span class="next-text nav-mobile">下一篇</span>
