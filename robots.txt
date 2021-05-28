@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://qiaocci.github.io/sitemap.xml
+Sitemap: https://qiaocco.github.io/sitemap.xml
