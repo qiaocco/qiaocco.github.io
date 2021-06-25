@@ -1,0 +1,164 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>golang slice扩容 - qiaocc's blog</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="qiaocc"><meta name=description content="先看一个例子： 1 2 3 4 5 s1 := []int{1, 2} println(len(s1), cap(s1)) // 2 2 s1 = append(s1, 3, 4, 5) println(len(s1), cap(s1)) // 5 6，cap从2扩容到6，为什么不是5？ 扩容规则 源码： 1 2 3 4 5 6 7 8 9 10 11 12 13"><meta name=keywords content="qiaocc,blog,Devops,运维开发,python,k8s"><meta name=generator content="Hugo 0.79.1 with theme even"><link rel=canonical href=https://blog.qiaocco.com/post/slice%E6%89%A9%E5%AE%B9/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="golang slice扩容"><meta property="og:description" content="先看一个例子： 1 2 3 4 5 s1 := []int{1, 2} println(len(s1), cap(s1)) // 2 2 s1 = append(s1, 3, 4, 5) println(len(s1), cap(s1)) // 5 6，cap从2扩容到6，为什么不是5？ 扩容规则 源码： 1 2 3 4 5 6 7 8 9 10 11 12 13"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.qiaocco.com/post/slice%E6%89%A9%E5%AE%B9/"><meta property="article:published_time" content="2021-06-25T14:31:39+08:00"><meta property="article:modified_time" content="2021-06-25T14:31:39+08:00"><meta itemprop=name content="golang slice扩容"><meta itemprop=description content="先看一个例子： 1 2 3 4 5 s1 := []int{1, 2} println(len(s1), cap(s1)) // 2 2 s1 = append(s1, 3, 4, 5) println(len(s1), cap(s1)) // 5 6，cap从2扩容到6，为什么不是5？ 扩容规则 源码： 1 2 3 4 5 6 7 8 9 10 11 12 13"><meta itemprop=datePublished content="2021-06-25T14:31:39+08:00"><meta itemprop=dateModified content="2021-06-25T14:31:39+08:00"><meta itemprop=wordCount content="969"><meta itemprop=keywords content="golang,"><meta name=twitter:card content="summary"><meta name=twitter:title content="golang slice扩容"><meta name=twitter:description content="先看一个例子： 1 2 3 4 5 s1 := []int{1, 2} println(len(s1), cap(s1)) // 2 2 s1 = append(s1, 3, 4, 5) println(len(s1), cap(s1)) // 5 6，cap从2扩容到6，为什么不是5？ 扩容规则 源码： 1 2 3 4 5 6 7 8 9 10 11 12 13"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>qiaocc's blog</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/post/about_me/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>qiaocc's blog</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/post/about_me/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>golang slice扩容</h1><div class=post-meta><span class=post-time>2021-06-25</span>
+<span class=more-meta>约 969 字</span>
+<span class=more-meta>预计阅读 2 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><a href=#扩容规则>扩容规则</a></li><li><a href=#内存对齐>内存对齐</a></li></ul></nav></div></div><div class=post-content><p>先看一个例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=nx>s1</span> <span class=o>:=</span> <span class=p>[]</span><span class=kt>int</span><span class=p>{</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>}</span>
+<span class=nb>println</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=nx>s1</span><span class=p>),</span> <span class=nb>cap</span><span class=p>(</span><span class=nx>s1</span><span class=p>))</span> <span class=c1>// 2 2
+</span><span class=c1></span>
+<span class=nx>s1</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>s1</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>5</span><span class=p>)</span>
+<span class=nb>println</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=nx>s1</span><span class=p>),</span> <span class=nb>cap</span><span class=p>(</span><span class=nx>s1</span><span class=p>))</span> <span class=c1>// 5 6，cap从2扩容到6，为什么不是5？
+</span></code></pre></td></tr></table></div></div><h1 id=扩容规则>扩容规则</h1><p>源码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=c1>// runtime/slice.go
+</span><span class=c1>// func growslice(et *_type, old slice, cap int) slice {}
+</span><span class=c1></span>
+<span class=c1>// old.cap 现有容量
+</span><span class=c1>// cap 预估容量
+</span><span class=c1>// newcap 最终分配的容量
+</span><span class=c1></span><span class=nx>newcap</span> <span class=o>:=</span> <span class=nx>old</span><span class=p>.</span><span class=nx>cap</span>
+<span class=nx>doublecap</span> <span class=o>:=</span> <span class=nx>newcap</span> <span class=o>+</span> <span class=nx>newcap</span>
+<span class=k>if</span> <span class=nx>cap</span> <span class=p>&gt;</span> <span class=nx>doublecap</span> <span class=p>{</span>
+    <span class=nx>newcap</span> <span class=p>=</span> <span class=nx>cap</span>
+<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=nx>old</span><span class=p>.</span><span class=nx>cap</span> <span class=p>&lt;</span> <span class=mi>1024</span> <span class=p>{</span>
+        <span class=nx>newcap</span> <span class=p>=</span> <span class=nx>doublecap</span>
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// Check 0 &lt; newcap to detect overflow
+</span><span class=c1></span>        <span class=c1>// and prevent an infinite loop.
+</span><span class=c1></span>        <span class=k>for</span> <span class=mi>0</span> <span class=p>&lt;</span> <span class=nx>newcap</span> <span class=o>&amp;&amp;</span> <span class=nx>newcap</span> <span class=p>&lt;</span> <span class=nx>cap</span> <span class=p>{</span>
+            <span class=nx>newcap</span> <span class=o>+=</span> <span class=nx>newcap</span> <span class=o>/</span> <span class=mi>4</span>
+        <span class=p>}</span>
+        <span class=c1>// Set newcap to the requested cap when
+</span><span class=c1></span>        <span class=c1>// the newcap calculation overflowed.
+</span><span class=c1></span>        <span class=k>if</span> <span class=nx>newcap</span> <span class=o>&lt;=</span> <span class=mi>0</span> <span class=p>{</span>
+            <span class=nx>newcap</span> <span class=p>=</span> <span class=nx>cap</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><p>扩容规则：</p><ul><li>现有容量double后，小于预估容量，新容量就等于预估容量</li><li>现有容量double后，大于预估容量时，<ul><li>现有容量小于1024，那么新容量就等于现有容量double</li><li>现有容量大于1024，新容量等于现有容量*1.25</li></ul></li></ul><p>回到上面的例子中：</p><p>// old.cap 现有容量 = 2
+// cap 预估容量 = 5
+// newcap 新容量 = 5</p><p>分析到这一步，新容量应该是5，但是结果是6。</p><p>这是为什么呢？</p><h1 id=内存对齐>内存对齐</h1><p>计算出了新容量之后，还没有完，出于内存的高效利用考虑，还要进行内存对齐</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=c1>// runtime/slice.go
+</span><span class=c1>// func growslice(et *_type, old slice, cap int) slice {}
+</span><span class=c1></span><span class=k>case</span> <span class=nx>et</span><span class=p>.</span><span class=nx>size</span> <span class=o>==</span> <span class=nx>sys</span><span class=p>.</span><span class=nx>PtrSize</span><span class=p>:</span> <span class=c1>// 8
+</span><span class=c1></span>    <span class=nx>lenmem</span> <span class=p>=</span> <span class=nb>uintptr</span><span class=p>(</span><span class=nx>old</span><span class=p>.</span><span class=nx>len</span><span class=p>)</span> <span class=o>*</span> <span class=nx>sys</span><span class=p>.</span><span class=nx>PtrSize</span> <span class=c1>// 一个int占用8个字节，共2 * 8 = 16字节
+</span><span class=c1></span>    <span class=nx>newlenmem</span> <span class=p>=</span> <span class=nb>uintptr</span><span class=p>(</span><span class=nx>cap</span><span class=p>)</span> <span class=o>*</span> <span class=nx>sys</span><span class=p>.</span><span class=nx>PtrSize</span> <span class=c1>// 预估容量5 * 8字节 = 40字节
+</span><span class=c1></span>    <span class=nx>capmem</span> <span class=p>=</span> <span class=nf>roundupsize</span><span class=p>(</span><span class=nb>uintptr</span><span class=p>(</span><span class=nx>newcap</span><span class=p>)</span> <span class=o>*</span> <span class=nx>sys</span><span class=p>.</span><span class=nx>PtrSize</span><span class=p>)</span>　<span class=c1>// 此次扩容需要申请的内存大小 6 * 8 = 48字节
+</span><span class=c1></span>    <span class=nx>overflow</span> <span class=p>=</span> <span class=nb>uintptr</span><span class=p>(</span><span class=nx>newcap</span><span class=p>)</span> <span class=p>&gt;</span> <span class=nx>maxAlloc</span><span class=o>/</span><span class=nx>sys</span><span class=p>.</span><span class=nx>PtrSize</span> <span class=c1>// false
+</span><span class=c1></span>    <span class=nx>newcap</span> <span class=p>=</span> <span class=nb>int</span><span class=p>(</span><span class=nx>capmem</span> <span class=o>/</span> <span class=nx>sys</span><span class=p>.</span><span class=nx>PtrSize</span><span class=p>)</span> <span class=c1>// newcap最终是6
+</span></code></pre></td></tr></table></div></div><p>下面是内存对齐的过程：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=c1>// runtime/msize.go
+</span><span class=c1>// Returns size of the memory block that mallocgc will allocate if you ask for the size.
+</span><span class=c1></span><span class=kd>func</span> <span class=nf>roundupsize</span><span class=p>(</span><span class=nx>size</span> <span class=kt>uintptr</span><span class=p>)</span> <span class=kt>uintptr</span> <span class=p>{</span>
+	<span class=k>if</span> <span class=nx>size</span> <span class=p>&lt;</span> <span class=nx>_MaxSmallSize</span> <span class=p>{</span>
+		<span class=k>if</span> <span class=nx>size</span> <span class=o>&lt;=</span> <span class=nx>smallSizeMax</span><span class=o>-</span><span class=mi>8</span> <span class=p>{</span>
+            <span class=c1>// divRoundUp(size, smallSizeDiv)　向上取整。47/8 = 6
+</span><span class=c1></span>			<span class=k>return</span> <span class=nb>uintptr</span><span class=p>(</span><span class=nx>class_to_size</span><span class=p>[</span><span class=nx>size_to_class8</span><span class=p>[</span><span class=nf>divRoundUp</span><span class=p>(</span><span class=nx>size</span><span class=p>,</span> <span class=nx>smallSizeDiv</span><span class=p>)]])</span>
+		<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+			<span class=k>return</span> <span class=nb>uintptr</span><span class=p>(</span><span class=nx>class_to_size</span><span class=p>[</span><span class=nx>size_to_class128</span><span class=p>[</span><span class=nf>divRoundUp</span><span class=p>(</span><span class=nx>size</span><span class=o>-</span><span class=nx>smallSizeMax</span><span class=p>,</span> <span class=nx>largeSizeDiv</span><span class=p>)]])</span>
+		<span class=p>}</span>
+	<span class=p>}</span>
+	<span class=k>if</span> <span class=nx>size</span><span class=o>+</span><span class=nx>_PageSize</span> <span class=p>&lt;</span> <span class=nx>size</span> <span class=p>{</span>
+		<span class=k>return</span> <span class=nx>size</span>
+	<span class=p>}</span>
+	<span class=k>return</span> <span class=nf>alignUp</span><span class=p>(</span><span class=nx>size</span><span class=p>,</span> <span class=nx>_PageSize</span><span class=p>)</span>
+<span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><p>所需内存 = 预估容量 * 元素类型大小</p><p>内存这里需要了解<code>golang</code>的内存管理模块，源码在<code>runtime/sizeclasses.go</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=c1>// class  bytes/obj  bytes/span  objects  tail waste  max waste
+</span><span class=c1>//     1          8        8192     1024           0     87.50%
+</span><span class=c1>//     2         16        8192      512           0     43.75%
+</span><span class=c1>//     3         24        8192      341           8     29.24%
+</span><span class=c1>//     4         32        8192      256           0     21.88%
+</span><span class=c1>//     5         48        8192      170          32     31.52%
+</span><span class=c1>//     6         64        8192      128           0     23.44%
+</span><span class=c1>//     7         80        8192      102          32     19.07%
+</span><span class=c1>//     8         96        8192       85          32     15.95%
+</span><span class=c1>//     9        112        8192       73          16     13.56%
+</span><span class=c1></span><span class=o>...</span>
+
+
+<span class=c1>// go采用的是基于tcmalloc进行的内存分配，也就是go语言自己实现的内存分配器。
+</span><span class=c1>// 内存划分规则
+</span><span class=c1></span><span class=kd>var</span> <span class=nx>class_to_size</span> <span class=p>=</span> <span class=p>[</span><span class=nx>_NumSizeClasses</span><span class=p>]</span><span class=kt>uint16</span><span class=p>{</span><span class=mi>0</span><span class=p>,</span> <span class=mi>8</span><span class=p>,</span> <span class=mi>16</span><span class=p>,</span> <span class=mi>24</span><span class=p>,</span> <span class=mi>32</span><span class=p>,</span> <span class=mi>48</span><span class=p>,</span> <span class=mi>64</span><span class=p>,</span> <span class=mi>80</span><span class=p>,</span> <span class=mi>96</span><span class=p>,</span> <span class=mi>112</span><span class=p>,</span> <span class=mi>128</span><span class=p>,</span> <span class=mi>144</span><span class=p>,</span> <span class=mi>160</span><span class=p>,</span> <span class=mi>176</span><span class=p>,</span> <span class=mi>192</span><span class=p>,</span> <span class=mi>208</span><span class=p>,</span> <span class=mi>224</span><span class=p>,</span> <span class=mi>240</span><span class=p>,</span> <span class=mi>256</span><span class=p>,</span> <span class=mi>288</span><span class=p>,</span> <span class=mi>320</span><span class=p>,</span> <span class=mi>352</span><span class=p>,</span> <span class=mi>384</span><span class=p>,</span> <span class=mi>416</span><span class=p>,</span> <span class=mi>448</span><span class=p>,</span> <span class=mi>480</span><span class=p>,</span> <span class=mi>512</span><span class=p>,</span> <span class=mi>576</span><span class=p>,</span> <span class=mi>640</span><span class=p>,</span> <span class=mi>704</span><span class=p>,</span> <span class=mi>768</span><span class=p>,</span> <span class=mi>896</span><span class=p>,</span> <span class=mi>1024</span><span class=p>,</span> <span class=mi>1152</span><span class=p>,</span> <span class=mi>1280</span><span class=p>,</span> <span class=mi>1408</span><span class=p>,</span> <span class=mi>1536</span><span class=p>,</span> <span class=mi>1792</span><span class=p>,</span> <span class=mi>2048</span><span class=p>,</span> <span class=mi>2304</span><span class=p>,</span> <span class=mi>2688</span><span class=p>,</span> <span class=mi>3072</span><span class=p>,</span> <span class=mi>3200</span><span class=p>,</span> <span class=mi>3456</span><span class=p>,</span> <span class=mi>4096</span><span class=p>,</span> <span class=mi>4864</span><span class=p>,</span> <span class=mi>5376</span><span class=p>,</span> <span class=mi>6144</span><span class=p>,</span> <span class=mi>6528</span><span class=p>,</span> <span class=mi>6784</span><span class=p>,</span> <span class=mi>6912</span><span class=p>,</span> <span class=mi>8192</span><span class=p>,</span> <span class=mi>9472</span><span class=p>,</span> <span class=mi>9728</span><span class=p>,</span> <span class=mi>10240</span><span class=p>,</span> <span class=mi>10880</span><span class=p>,</span> <span class=mi>12288</span><span class=p>,</span> <span class=mi>13568</span><span class=p>,</span> <span class=mi>14336</span><span class=p>,</span> <span class=mi>16384</span><span class=p>,</span> <span class=mi>18432</span><span class=p>,</span> <span class=mi>19072</span><span class=p>,</span> <span class=mi>20480</span><span class=p>,</span> <span class=mi>21760</span><span class=p>,</span> <span class=mi>24576</span><span class=p>,</span> <span class=mi>27264</span><span class=p>,</span> <span class=mi>28672</span><span class=p>,</span> <span class=mi>32768</span><span class=p>}</span>
+
+</code></pre></td></tr></table></div></div><p>申请内存时，选择相近的，且大于等于需要的大小</p><p>总结一下，扩容一共分三步：</p><ul><li><p>计算预估容量大小</p></li><li><p>计算扩容后需要占用的内存大小</p></li><li><p>计算最终容量大小</p></li></ul></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>qiaocc</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2021-06-25</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/golang/>golang</a></div><nav class=post-nav><a class=next href=/post/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E5%BF%B504-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B/><span class="next-text nav-default">操作系统概念(04) 多线程编程</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><script src=https://utteranc.es/client.js repo=qiaocco/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script><noscript>Please enable JavaScript to view the <a href=https://github.com/utterance>comments powered by utterances.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:qiaocco@gmail.com class="iconfont icon-email" title=email></a><a href=https://github.com/qiaocco class="iconfont icon-github" title=github></a><a href=https://blog.qiaocco.com/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>qiaocc</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js></script><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','G-1ZTQR6B4BF','auto');ga('set','anonymizeIp',true);ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script></body></html>
