@@ -1,7 +1,7 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>k8s in action(05) running app in k8s - qiaocc's blog</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="qiaocc"><meta name=description content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><meta name=keywords content="qiaocc,blog,Devops,运维开发,python,k8s"><meta name=generator content="Hugo 0.79.1 with theme even"><link rel=canonical href=https://blog.qiaocco.com/post/k8s-in-action05-running-app-in-k8s/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="k8s in action(05) running app in k8s"><meta property="og:description" content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.qiaocco.com/post/k8s-in-action05-running-app-in-k8s/"><meta property="article:published_time" content="2021-04-14T23:11:31+08:00"><meta property="article:modified_time" content="2021-04-14T23:11:31+08:00"><meta itemprop=name content="k8s in action(05) running app in k8s"><meta itemprop=description content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><meta itemprop=datePublished content="2021-04-14T23:11:31+08:00"><meta itemprop=dateModified content="2021-04-14T23:11:31+08:00"><meta itemprop=wordCount content="3900"><meta itemprop=keywords content="k8s,"><meta name=twitter:card content="summary"><meta name=twitter:title content="k8s in action(05) running app in k8s"><meta name=twitter:description content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>qiaocc's blog</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/post/about_me/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>qiaocc's blog</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/post/about_me/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>k8s in action(05) running app in k8s</h1><div class=post-meta><span class=post-time>2021-04-14</span>
-<span class=more-meta>约 3900 字</span>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>k8s in action(05) running app in pods - qiaocc's blog</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="qiaocc"><meta name=description content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><meta name=keywords content="qiaocc,blog,Devops,运维开发,python,k8s"><meta name=generator content="Hugo 0.79.1 with theme even"><link rel=canonical href=https://blog.qiaocco.com/post/k8s-in-action05-running-app-in-pods/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="k8s in action(05) running app in pods"><meta property="og:description" content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.qiaocco.com/post/k8s-in-action05-running-app-in-pods/"><meta property="article:published_time" content="2021-04-14T23:11:31+08:00"><meta property="article:modified_time" content="2021-04-14T23:11:31+08:00"><meta itemprop=name content="k8s in action(05) running app in pods"><meta itemprop=description content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><meta itemprop=datePublished content="2021-04-14T23:11:31+08:00"><meta itemprop=dateModified content="2021-04-14T23:11:31+08:00"><meta itemprop=wordCount content="3916"><meta itemprop=keywords content="k8s,"><meta name=twitter:card content="summary"><meta name=twitter:title content="k8s in action(05) running app in pods"><meta name=twitter:description content="重点 理解如何创建和何时创建group containers 用yaml文件创建pod，运行app 与app交互，查看log和运行环境 扩展主容器，增加sidecar容"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>qiaocc's blog</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/post/about_me/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>qiaocc's blog</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/post/about_me/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>k8s in action(05) running app in pods</h1><div class=post-meta><span class=post-time>2021-04-14</span>
+<span class=more-meta>约 3916 字</span>
 <span class=more-meta>预计阅读 8 分钟</span>
-<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#重点>重点</a></li><li><a href=#51-理解pod>5.1 理解pod</a><ul><li><a href=#511-pod的特点>5.1.1 pod的特点：</a></li><li><a href=#512-organizing-containers-into-pods>5.1.2 Organizing containers into pods</a></li></ul></li><li><a href=#52-通过yaml配置文件创建pod>5.2 通过yaml配置文件创建pod</a></li><li><a href=#53-与app和pod进行交互>5.3 与app和pod进行交互</a><ul><li><a href=#531-向pod中的应用发送请求>5.3.1 向pod中的应用发送请求</a></li><li><a href=#532-查看日志>5.3.2 查看日志</a></li><li><a href=#533-复制文件>5.3.3 复制文件</a></li><li><a href=#534-在容器中执行命令>5.3.4 在容器中执行命令</a></li><li><a href=#535-attach命令>5.3.5 attach命令</a></li></ul></li><li><a href=#54-在pod中运行多个容器>5.4 在pod中运行多个容器</a><ul><li><a href=#541-扩展kubia使用envoy代理>5.4.1 扩展kubia，使用Envoy代理</a></li><li><a href=#542-增加envoy代理>5.4.2 增加Envoy代理</a></li><li><a href=#543-容器交互>5.4.3 容器交互</a></li></ul></li><li><a href=#55-pod启动时运行额外的容器>5.5 pod启动时运行额外的容器</a><ul><li><a href=#551-初始化容器init-containers>5.5.1 初始化容器(init containers)</a></li><li><a href=#552-使用init-containers>5.5.2 使用init containers</a></li><li><a href=#553-检查容器>5.5.3 检查容器</a></li></ul></li><li><a href=#56-删除操作>5.6 删除操作</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=重点>重点</h2><ul><li>理解如何创建和何时创建group containers</li><li>用yaml文件创建pod，运行app</li><li>与app交互，查看log和运行环境</li><li>扩展主容器，增加sidecar容器</li><li>pod启动时，初始化容器</li></ul><h2 id=51-理解pod>5.1 理解pod</h2><h3 id=511-pod的特点>5.1.1 pod的特点：</h3><ol><li>一个pod可能包含一个或多个container</li><li>一个pod只能属于单个node，不会属于多个node</li></ol><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150504.png alt></p><h4 id=为什么需要pod>为什么需要pod？</h4><p>假设一个应用，包含多个进程，进程间是通过ipc或shared files通信的，这就要求多个进程运行在同一台电脑上。</p><p>一个容器可以运行多个进程，但是不建议这样做。原因是：</p><ol><li>无法区分不同进程的日志。默认情况下，应用将日志写到标准输出，docker可以很方便的查看日志，但是如果一个容器运行多个进程，那就无法区分日志属于哪个进程的。</li><li>容器在根进程死亡时会自动重启，不会管子进程的状态。</li></ol><p>既然不建议在一个容器中运行多个进程，那么我们就要把多个进程，拆分到多个容器中，并且保证多个进程好像在同一个容器运行。这就需要引入pod了。</p><p>pod内的容器共享同一份网络空间，例如网络接口，ip，端口。</p><p>pod内的容器，同时也共享hostname。</p><p>但是不会共享文件系统，如果想要共享文件系统，需要单独挂载。</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150505.png alt></p><p>基于上述的特点，多个进程虽然运行在不同的容器中，但是他们好像在同一个容器一样。</p><h3 id=512-organizing-containers-into-pods>5.1.2 Organizing containers into pods</h3><p>在虚拟机时代，一台虚拟机可以运行多个应用。但是在使用pod时，建议一个pod只运行一个应用。应用的每个进程，运行在不同的容器里。</p><p>为什么不建议多个应用运行在同一个pod？</p><ol><li>提高资源利用率。如果有多个节点，但是应用只跑在一个节点，其他节点资源（cpu、内存、磁盘，带宽）就浪费了</li><li>方便水平扩展。水平扩展的最小单位是一个pod，假设前端应用和数据库部署在同一个pod，扩展时，会同时扩展app和数据库，但是通常数据库的扩展方法和前端是不同的。前端是无状态的，但是数据库是有状态的，扩展可能要考虑更多因素。</li></ol><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150506.png alt></p><h4 id=sidecar-容器>sidecar 容器</h4><p>运行在同一个pod的多个进程中，有的是主容器，负责主要任务。除此之外，还有<strong>sidecar容器</strong>，负责辅助性的任务。</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150507.png alt></p><p>是否需要把容器分到多个pod？如果下面几个判断条件都回答“是”，那么不要拆分到多个pod。</p><ol><li>这些容器需要运行在同一个host吗？</li><li>是否想把这些容器当做一个整理来管理？</li><li>它们是一个整体吗？</li><li>它们可以一起水平扩展吗？</li><li>单个节点能满足它们的资源组合需求吗？</li></ol><p>经验法则：总是把容器放到不同的pod中，除非有特殊的原因需要把它们作为一个整体。</p><h2 id=52-通过yaml配置文件创建pod>5.2 通过yaml配置文件创建pod</h2><p>前面的章节中，我们已经学会使用命令行创建pod。这一章我们来学习使用配置文件创建pod，方便管理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#重点>重点</a></li><li><a href=#51-理解pod>5.1 理解pod</a><ul><li><a href=#511-pod的特点>5.1.1 pod的特点：</a></li><li><a href=#512-organizing-containers-into-pods>5.1.2 Organizing containers into pods</a></li></ul></li><li><a href=#52-通过yaml配置文件创建pod>5.2 通过yaml配置文件创建pod</a></li><li><a href=#53-与app和pod进行交互>5.3 与app和pod进行交互</a><ul><li><a href=#531-向pod中的应用发送请求>5.3.1 向pod中的应用发送请求</a></li><li><a href=#532-查看日志>5.3.2 查看日志</a></li><li><a href=#533-复制文件>5.3.3 复制文件</a></li><li><a href=#534-在容器中执行命令>5.3.4 在容器中执行命令</a></li><li><a href=#535-attach命令>5.3.5 attach命令</a></li></ul></li><li><a href=#54-在pod中运行多个容器>5.4 在pod中运行多个容器</a><ul><li><a href=#541-扩展kiada使用envoy代理>5.4.1 扩展kiada，使用Envoy代理</a></li><li><a href=#542-增加envoy代理>5.4.2 增加Envoy代理</a></li><li><a href=#543-容器交互>5.4.3 容器交互</a></li></ul></li><li><a href=#55-pod启动时运行额外的容器>5.5 pod启动时运行额外的容器</a><ul><li><a href=#551-初始化容器init-containers>5.5.1 初始化容器(init containers)</a></li><li><a href=#552-使用init-containers>5.5.2 使用init containers</a></li><li><a href=#553-检查容器>5.5.3 检查容器</a></li></ul></li><li><a href=#56-删除操作>5.6 删除操作</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=重点>重点</h2><ul><li>理解如何创建和何时创建group containers</li><li>用yaml文件创建pod，运行app</li><li>与app交互，查看log和运行环境</li><li>扩展主容器，增加sidecar容器</li><li>pod启动时，初始化容器</li></ul><h2 id=51-理解pod>5.1 理解pod</h2><h3 id=511-pod的特点>5.1.1 pod的特点：</h3><ol><li>一个pod可能包含一个或多个container</li><li>一个pod只能属于单个node，不会属于多个node</li></ol><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150504.png alt></p><h4 id=为什么需要pod>为什么需要pod？</h4><p>假设一个应用，包含多个进程，进程间是通过ipc或shared files通信的，这就要求多个进程运行在同一台电脑上。</p><p>一个容器可以运行多个进程，但是不建议这样做。原因是：</p><ol><li>无法区分不同进程的日志。默认情况下，应用将日志写到标准输出，docker可以很方便的查看日志，但是如果一个容器运行多个进程，那就无法区分日志属于哪个进程的。</li><li>容器在根进程死亡时会自动重启，不会管子进程的状态。</li></ol><p>既然不建议在一个容器中运行多个进程，那么我们就要把多个进程，拆分到多个容器中，并且保证多个进程好像在同一个容器运行。这就需要引入pod了。</p><p>pod内的容器共享同一份网络空间，例如网络接口，ip，端口。</p><p>pod内的容器，同时也共享hostname。</p><p>但是不会共享文件系统，如果想要共享文件系统，需要单独挂载。</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150505.png alt></p><p>基于上述的特点，多个进程虽然运行在不同的容器中，但是他们好像在同一个容器一样。</p><h3 id=512-organizing-containers-into-pods>5.1.2 Organizing containers into pods</h3><p>你可以把pod理解为独立的电脑.</p><p>在虚拟机时代，一台虚拟机可以运行多个应用。但是在使用pod时，建议一个pod只运行一个应用。应用的每个进程，运行在不同的容器里。</p><p>为什么不建议多个应用运行在同一个pod？</p><ol><li>提高资源利用率。如果有多个节点，但是应用只跑在一个节点，其他节点资源（cpu、内存、磁盘，带宽）就浪费了</li><li>方便水平扩展。水平扩展的最小单位是一个pod，假设前端应用和数据库部署在同一个pod，扩展时，会同时扩展app和数据库，但是通常数据库的扩展方法和前端是不同的。前端是无状态的，但是数据库是有状态的，扩展可能要考虑更多因素。</li></ol><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150506.png alt></p><h4 id=sidecar-容器>sidecar 容器</h4><p>运行在同一个pod的多个进程中，有的是主容器，负责主要任务。除此之外，还有<strong>sidecar容器</strong>，负责辅助性的任务。</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210208150507.png alt></p><p>是否需要把容器分到多个pod？如果下面几个判断条件都回答“是”，那么不要拆分到多个pod。</p><ol><li>这些容器需要运行在同一个host吗？</li><li>是否想把这些容器当做一个整理来管理？</li><li>它们是一个整体吗？</li><li>它们可以一起水平扩展吗？</li><li>单个节点能满足它们的资源组合需求吗？</li></ol><p>经验法则：总是把容器放到不同的pod中，除非有特殊的原因需要把它们作为一个整体。</p><h2 id=52-通过yaml配置文件创建pod>5.2 通过yaml配置文件创建pod</h2><p>前面的章节中，我们已经学会使用命令行创建pod。这一章我们来学习使用配置文件创建pod，方便管理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -12,15 +12,15 @@
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=c># kubia.yaml</span><span class=w>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=c># kiada.yaml</span><span class=w>
 </span><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w> </span><span class=c># api版本</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w> </span><span class=c># 类型</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kubia</span><span class=w> </span><span class=c># pod名称</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kiada</span><span class=w> </span><span class=c># pod名称</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kubia</span><span class=w> </span><span class=c># 容器名称</span><span class=w>
-</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>qiaocc/kubia:1.0</span><span class=w> </span><span class=c># 镜像</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kiada</span><span class=w> </span><span class=c># 容器名称</span><span class=w>
+</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>qiaocc/kiada:1.0</span><span class=w> </span><span class=c># 镜像</span><span class=w>
 </span><span class=w>      </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span>- <span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>8080</span><span class=w> </span><span class=c># app监听端口</span><span class=w>
 </span></code></pre></td></tr></table></div></div><p>这份配置文件结构整齐，更加容易理解。</p><p><strong>运行</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -35,13 +35,13 @@
 </span><span class=lnt>10
 </span><span class=lnt>11
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 运行</span>
-kubectl apply -f kubia.yaml
+kubectl apply -f kiada.yaml
 
 <span class=c1># 查看pod状态, -o wide 查看更多， -o yaml输出yaml格式</span>
-kubectl get pod kubia
+kubectl get pod kiada
 
 <span class=c1># 查看pod详情</span>
-kubectl describe pod kubia
+kubectl describe pod kiada
 
 <span class=c1># 查看创建pod时，发生的事件</span>
 kubectl get events
@@ -49,11 +49,11 @@ kubectl get events
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl get pod kubia -o wide
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl get pod kiada -o wide
 <span class=c1># output</span>
 NAME    READY   STATUS    RESTARTS   AGE    IP           NODE       NOMINATED NODE   READINESS GATES
-kubia   1/1     Running   <span class=m>2</span>          6d2h   172.17.0.8   minikube   &lt;none&gt;           &lt;none&gt;
-</code></pre></td></tr></table></div></div><p>输出结果显示，kubia pod的ip是<code>172.17.0.8</code></p><p>在k8s中，同一个node的不同pod之间可以联通，不通node的不同pod也可以联通</p></li><li><p>ssh登录pod所在的node，发起请求。</p></li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+kiada   1/1     Running   <span class=m>2</span>          6d2h   172.17.0.8   minikube   &lt;none&gt;           &lt;none&gt;
+</code></pre></td></tr></table></div></div><p>输出结果显示，kiada pod的ip是<code>172.17.0.8</code></p><p>在k8s中，同一个node的不同pod之间可以联通，不通node的不同pod也可以联通</p></li><li><p>ssh登录pod所在的node，发起请求。</p></li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>minikubt ssh
 curl 172.17.0.8:8000
@@ -67,7 +67,7 @@ curl 172.17.0.8:8000
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>kubectl port-forward kubia 8080
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>kubectl port-forward kiada 8080
 
 # 本地运行
 curl localhost:8080
@@ -82,40 +82,40 @@ curl localhost:8080
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl logs kubia
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl logs kiada
 <span class=c1># 实时日志</span>
-kubectl logs kubia -f
+kubectl logs kiada -f
 <span class=c1># 显示时间戳</span>
-kubectl logs kubia --timestamps<span class=o>=</span><span class=nb>true</span>
+kubectl logs kiada --timestamps<span class=o>=</span><span class=nb>true</span>
 <span class=c1># 最近两分钟的日志</span>
-kubectl logs kubia --since<span class=o>=</span>2m
+kubectl logs kiada --since<span class=o>=</span>2m
 <span class=c1># 指定开始时间</span>
-kubectl logs kubia --since-time<span class=o>=</span>2020-02-01T09:50:00Z
+kubectl logs kiada --since-time<span class=o>=</span>2020-02-01T09:50:00Z
 <span class=c1># 显示最近10行</span>
-kubectl logs kubia --tail<span class=o>=</span><span class=m>10</span>
+kubectl logs kiada --tail<span class=o>=</span><span class=m>10</span>
 </code></pre></td></tr></table></div></div><p>k8s为每个容器都单独保存了日志。日志通常存放在<code>/var/log/containers</code>目录。pod删除后，所有的日志也会删除。所以你需要指定一个中心化的日志系统。</p><p>k8s中，通常应用会把日志写入标准输出及标准错误。如果不这样做，而是把日志写入文件呢？</p><p>那你需要关注如何查看这些日志文件。理想情况下，你需要配置一个中心化的日志系统，但是有时候，你希望事情保持简单，而不用关系如果查看这些日志。下面的章节中，你会学习到如何将日志文件从容器中复制到你自己的电脑上。</p><h3 id=533-复制文件>5.3.3 复制文件</h3><p>复制文件到本地：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl cp kubia:/etc/hosts /tmp/kubia-hosts
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl cp kiada:/etc/hosts /tmp/kiada-hosts
 </code></pre></td></tr></table></div></div><p>复制文件到容器：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl cp /etc/hosts kubia:/tmp/kubia-hosts
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl cp /etc/hosts kiada:/tmp/kiada-hosts
 </code></pre></td></tr></table></div></div><h3 id=534-在容器中执行命令>5.3.4 在容器中执行命令</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 方法一：直接执行命令</span>
-kubectl <span class=nb>exec</span> kubia -- ps aux
+kubectl <span class=nb>exec</span> kiada -- ps aux
 <span class=c1># 方法二：进入交互shell</span>
-kubectl <span class=nb>exec</span> -it kubia -- bash
-</code></pre></td></tr></table></div></div><p>注意：方法二并不适用于所有情况。有些容器，基于安全方面，或者容器大小方面的考量，会舍弃很多linux二进制文件，导致很多命令无法执行。这时候，你需要一个<strong>临时容器</strong>（<em>ephemeral containers</em>）。这个特性还在alpha阶段，以后可能会移除。</p><h3 id=535-attach命令>5.3.5 attach命令</h3><p>用于应用读取stdin。</p><p>代码参考：<code>chap5/kubia-stdin-image</code></p><p>启动pod：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl apply -f kubia-stdin.yaml
+kubectl <span class=nb>exec</span> -it kiada -- bash
+</code></pre></td></tr></table></div></div><p>注意：方法二并不适用于所有情况。有些容器，基于安全方面，或者容器大小方面的考量，会舍弃很多linux二进制文件，导致很多命令无法执行。这时候，你需要一个<strong>临时容器</strong>（<em>ephemeral containers</em>）。这个特性还在alpha阶段，以后可能会移除。</p><h3 id=535-attach命令>5.3.5 attach命令</h3><p>用于应用读取stdin。</p><p>代码参考：<code>chap5/kiada-stdin-image</code></p><p>启动pod：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl apply -f kiada-stdin.yaml
 </code></pre></td></tr></table></div></div><p>端口转发：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl port-forward kubia-stdin <span class=m>8080</span>
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl port-forward kiada-stdin <span class=m>8080</span>
 </code></pre></td></tr></table></div></div><p>使用attach命令：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl attach -i kubia-stdin
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl attach -i kiada-stdin
 </code></pre></td></tr></table></div></div><p>进入命令行交互之后，输入"hello"，然后请求服务：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>curl http://127.0.0.1:8080
 </code></pre></td></tr></table></div></div><p>输出:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>hello, this is kubia-stdin. Your IP is ::ffff:127.0.0.1.
-</code></pre></td></tr></table></div></div><p>这时候，greeting变量已经被修改了。</p><h2 id=54-在pod中运行多个容器>5.4 在pod中运行多个容器</h2><p>目前kubia应用只支持http协议。我们想让它支持https协议。一种办法是通过修改代码，比较麻烦。另一种方法是增加sidecar应用，让其处理https协议。目前流行的组件是<code>Envoy</code>。Envoy是一个高性能的反向代理，它最初有Lyft开发，现在已经捐赠给了CNCF基金会，它也是<code>Service Mesh</code>的核心组件之一。</p><h3 id=541-扩展kubia使用envoy代理>5.4.1 扩展kubia，使用Envoy代理</h3><p>扩展之后的架构如下图：</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210414232031.png alt></p><p>pod中运行两个容器，Node.js和Envoy。Node.js容器处理HTTP请求，Envoy容器处理HTTPS请求。Envoy会接收HTTPS请求，通过local loopback创建HTTP请求并转发给Node.js应用。</p><p>Envoy还提供了web界面。</p><h3 id=542-增加envoy代理>5.4.2 增加Envoy代理</h3><p>Envoy官方提供了Docker镜像，但是需要一些额外的配置。本书的作者做好配置了，我们直接拿来用就好了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>hello, this is kiada-stdin. Your IP is ::ffff:127.0.0.1.
+</code></pre></td></tr></table></div></div><p>这时候，greeting变量已经被修改了。</p><h2 id=54-在pod中运行多个容器>5.4 在pod中运行多个容器</h2><p>目前kiada应用只支持http协议。我们想让它支持https协议。一种办法是通过修改代码，比较麻烦。另一种方法是增加sidecar应用，让其处理https协议。目前流行的组件是<code>Envoy</code>。Envoy是一个高性能的反向代理，它最初有Lyft开发，现在已经捐赠给了CNCF基金会，它也是<code>Service Mesh</code>的核心组件之一。</p><h3 id=541-扩展kiada使用envoy代理>5.4.1 扩展kiada，使用Envoy代理</h3><p>扩展之后的架构如下图：</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210414232031.png alt></p><p>pod中运行两个容器，Node.js和Envoy。Node.js容器处理HTTP请求，Envoy容器处理HTTPS请求。Envoy会接收HTTPS请求，通过local loopback创建HTTP请求并转发给Node.js应用。</p><p>Envoy还提供了web界面。</p><h3 id=542-增加envoy代理>5.4.2 增加Envoy代理</h3><p>Envoy官方提供了Docker镜像，但是需要一些额外的配置。本书的作者做好配置了，我们直接拿来用就好了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -136,22 +136,22 @@ kubectl <span class=nb>exec</span> -it kubia -- bash
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kubia-ssl</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kiada-ssl</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kubia</span><span class=w>
-</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>qiaocc/kubia:1.0</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kiada</span><span class=w>
+</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>qiaocc/kiada:1.0</span><span class=w>
 </span><span class=w>      </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>http</span><span class=w>
 </span><span class=w>          </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>8080</span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>envoy</span><span class=w>
-</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>luksa/kubia-ssl-proxy:1.0</span><span class=w>
+</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>luksa/kiada-ssl-proxy:1.0</span><span class=w>
 </span><span class=w>      </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>https</span><span class=w>
 </span><span class=w>          </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>8443</span><span class=w>
 </span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>admin</span><span class=w>
 </span><span class=w>          </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>9901</span><span class=w>
-</span></code></pre></td></tr></table></div></div><p>新的pod叫做kubia-ssl，包含两个容器：kubia和envoy。代理envoy增加了两个端口，8443是HTTPS端口，9901是web界面端口。</p><p>使用<code>kubectl apply -f kubia-ssl.yaml</code>命令，创建这个pod。</p><h3 id=543-容器交互>5.4.3 容器交互</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span></code></pre></td></tr></table></div></div><p>新的pod叫做kiada-ssl，包含两个容器：kiada和envoy。代理envoy增加了两个端口，8443是HTTPS端口，9901是web界面端口。</p><p>使用<code>kubectl apply -f kiada-ssl.yaml</code>命令，创建这个pod。</p><h3 id=543-容器交互>5.4.3 容器交互</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -169,10 +169,10 @@ curl http://127.0.0.1:8080
 <span class=c1># 3. 验证https协议(自签证书，需要加--insecure)</span>
 curl https://localhost:8443 --insecure
 <span class=c1># 4. 查看log</span>
-kubectl logs kubia-ssl -c kubia
-kubectl logs kubia-ssl --all-containers
+kubectl logs kiada-ssl -c kiada
+kubectl logs kiada-ssl --all-containers
 <span class=c1># 5. 进入bash</span>
-kubectl <span class=nb>exec</span> -it kubia-ssl -c envoy -- bash
+kubectl <span class=nb>exec</span> -it kiada-ssl -c envoy -- bash
 </code></pre></td></tr></table></div></div><h2 id=55-pod启动时运行额外的容器>5.5 pod启动时运行额外的容器</h2><p>当pod包含多个容器时，所有容器会并行(parallel)启动。k8s中，没有提供这种机制，让你能够指定容器启动的先后顺序。然而，k8s允许在主容器启动之前，启动一些初始化容器，去做初始化工作。</p><h3 id=551-初始化容器init-containers>5.5.1 初始化容器(init containers)</h3><p>init containers在主容器之前，一个接一个启动（非并行）。当所有init containers启动成功之后，主容器才会启动。</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210419111815.png alt></p><p>作用：</p><ol><li>初始化挂载卷。配置文件，下载的文件，证书。</li><li>初始化网络。</li><li>设置pod启动的前置条件。如依赖关系。</li><li>发送信号。通知外部系统。</li></ol><p>这些工作，在主容器中也可以做，为什么需要init containers呢？</p><p>使用init containers不需要主容器重新构建，方便在多个应用中复用。尤其是你想在pod中，注入基础设施相关的功能时，尤其方便。</p><p>另一个原因是安全。如果遇到安全问题，方便解决。</p><p>例如，pod需要注册到外部系统。注册时需要secret token去鉴权。如果这一步放到主容器中做，secret token要保存在主容器中。如果遇到安全隐患，攻击者可能窃取secret token。如果放到init containers中做，会降低风险。</p><h3 id=552-使用init-containers>5.5.2 使用init containers</h3><p>初始化容器定义在<code>initContainers</code>字段。我们看下pod清单：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -199,7 +199,7 @@ kubectl <span class=nb>exec</span> -it kubia-ssl -c envoy -- bash
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
 </span><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
 </span><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
-</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kubia-init</span><span class=w>
+</span><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kiada-init</span><span class=w>
 </span><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=nt>initContainers</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>init-demo</span><span class=w>
@@ -207,13 +207,13 @@ kubectl <span class=nb>exec</span> -it kubia-ssl -c envoy -- bash
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>network-check</span><span class=w>
 </span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>qiaocc/network-connectivity-checker:1.0</span><span class=w>
 </span><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
-</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kubia</span><span class=w>
-</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>qiaocc/kubia:1.0</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>kiada</span><span class=w>
+</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>qiaocc/kiada:1.0</span><span class=w>
 </span><span class=w>      </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>http</span><span class=w>
 </span><span class=w>          </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>8080</span><span class=w>
 </span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>envoy</span><span class=w>
-</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>luksa/kubia-ssl-proxy:1.0</span><span class=w>
+</span><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>luksa/kiada-ssl-proxy:1.0</span><span class=w>
 </span><span class=w>      </span><span class=nt>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>https</span><span class=w>
 </span><span class=w>          </span><span class=nt>containerPort</span><span class=p>:</span><span class=w> </span><span class=m>8443</span><span class=w>
@@ -225,7 +225,7 @@ kubectl <span class=nb>exec</span> -it kubia-ssl -c envoy -- bash
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 运行容器</span>
-kubectl apply -f kubia-init.yaml
+kubectl apply -f kiada-init.yaml
 <span class=c1># 检查状态</span>
 kubectl get pods -w
 kubectl get events -w
@@ -234,9 +234,9 @@ kubectl get events -w
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 查看log。-c指定容器名字</span>
-kubectl logs kubia-init -c network-check
+kubectl logs kiada-init -c network-check
 <span class=c1># 执行命令</span>
-kubectl <span class=nb>exec</span> -it kubia-init-slow -c init-demo -- sh
+kubectl <span class=nb>exec</span> -it kiada-init-slow -c init-demo -- sh
 </code></pre></td></tr></table></div></div><h2 id=56-删除操作>5.6 删除操作</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -247,11 +247,11 @@ kubectl <span class=nb>exec</span> -it kubia-init-slow -c init-demo -- sh
 </span><span class=lnt>8
 </span><span class=lnt>9
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=c1># 删除pod</span>
-kubectl delete po kubia
+kubectl delete po kiada
 <span class=c1># 删除多个pod</span>
-kubectl delete po kubia-init kubia-init-slow
+kubectl delete po kiada-init kiada-init-slow
 <span class=c1># 使用配置文件删除</span>
-kubectl delete -f kubia-ssl.yaml
+kubectl delete -f kiada-ssl.yaml
 <span class=c1># 删除目录下所有yaml配置</span>
 kubectl delete -f Chapter05/
 

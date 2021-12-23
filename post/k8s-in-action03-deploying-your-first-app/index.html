@@ -49,20 +49,20 @@ k describe nodes minikube
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl describe pod
 </code></pre></td></tr></table></div></div><p>运行kubectl create后，k8s在背后做了什么事情？</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210325164957.png alt></p><p>执行<code>kubectl create</code>命令时，会先想api server发送一个http请求， 说明我要创建一个deployment了。k8s创建Pod对象（这时候，只是创建对象，还没有真正创建pod）。然后将pod对象调度到工作节点，节点上的kubelete会指导Docker创建对应的容器。</p><h3 id=暴露应用>暴露应用</h3><p>应用已经跑起来了，如何访问这个服务呢？每个pod有独立的ip，但是这个ip只能通过集群内部访问。如何在集群外部访问呢？</p><p>一种办法是，创建Service，指定类型是LoadBalancer。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl expose deployment kiada --type<span class=o>=</span>LoadBalancer --port <span class=m>8080</span>
-</code></pre></td></tr></table></div></div><p>这个命令会：</p><ul><li>把所有属于kubia的pod，作为服务暴露出去。</li><li>外部用户通过负载均衡访问</li></ul><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210326185205.png alt></p><p>查看刚刚创建的服务:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table></div></div><p>这个命令会：</p><ul><li>把所有属于kiada的pod，作为服务暴露出去。</li><li>外部用户通过负载均衡访问</li></ul><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210326185205.png alt></p><p>查看刚刚创建的服务:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl get service
 </code></pre></td></tr></table></div></div><p>创建服务的流程：</p><p><img src=https://cdn.jsdelivr.net/gh/qiaocci/img-repo@master/20210330143857.png alt></p><p>其中， 第3步，k8s本身不提供负载均衡。如果你的集群在云上部署，他会使用云厂商的负载均衡。</p><p>当<code>EXTERNAL-IP</code>状态从pending改为真正的ip后， 就可以使用curl命令访问：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>curl 35.246.179.22:8080
 </code></pre></td></tr></table></div></div><p>注意：minikube不支持这种方式。</p><p>minikube如何访问服务呢？</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>minikube service kubia --url
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>minikube service kiada --url
 </code></pre></td></tr></table></div></div><h3 id=水平扩展>水平扩展</h3><p>现在我们运行了一个单实例的应用。如果突然有很多人访问应用，那么单实例就抗不住大量的流量。这时候，你需要额外的实例，去分担整个流量。这就是水平扩展。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>kubectl scale deployment kiada --replicas<span class=o>=</span><span class=m>3</span>
-</code></pre></td></tr></table></div></div><p>你只需要告诉k8s，最终想要达到的效果是， 有3个kubia的副本。k8s就会自动扩展。</p><p>这是k8s中的一个基础原则。你只要告诉k8s，最终想实现的效果，k8s就会去实现它。你不用关心k8s如何实现的。k8s会自动检查当前状态，和最终实现的状态，它们两者的差异，最终会决定如何实现它。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table></div></div><p>你只需要告诉k8s，最终想要达到的效果是， 有3个kiada的副本。k8s就会自动扩展。</p><p>这是k8s中的一个基础原则。你只要告诉k8s，最终想实现的效果，k8s就会去实现它。你不用关心k8s如何实现的。k8s会自动检查当前状态，和最终实现的状态，它们两者的差异，最终会决定如何实现它。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>$ k get deployments
 NAME    READY   UP-TO-DATE   AVAILABLE   AGE
-kubia   3/3     <span class=m>3</span>            <span class=m>3</span>           4h56m
+kiada   3/3     <span class=m>3</span>            <span class=m>3</span>           4h56m
 </code></pre></td></tr></table></div></div><p>3个实例已经up-to-date, 已经ready。</p><p>我们查看一下pod的信息：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
